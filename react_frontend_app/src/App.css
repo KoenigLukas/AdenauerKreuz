@@ -1,0 +1,52 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+}
+
+a{
+  color: orangered;
+  text-decoration: none;
+}
+.kreuzTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.kreuzTable td, .kreuzTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.kreuzTable tr:nth-child(even){background-color: #f2f2f2;}
+
+.kreuzTable tr:hover {background-color: #ddd;}
+
+.kreuzTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.container{
+  padding: 3rem 1rem 0rem 0rem;
+}
+
+.btn{
+  display: inline-block;
+  border: none;
+  background: #999999;
+  padding: 7px 20px;
+  cursor: pointer;
+}
+
+.btn:hover{
+  background: #666;
+}
