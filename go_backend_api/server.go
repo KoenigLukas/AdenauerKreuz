@@ -1,14 +1,23 @@
 package main
 
 import (
+	"./config"
 	"./handler"
 	"./middleware"
+	"./db"
+	"database/sql"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
+var Con sql.Conn
+
 func main() {
+
+	db.Init()
+	defer db.Db.Close()
+
 	router := mux.NewRouter()
 	router.Use(middleware.LoggerMiddleware)
 
@@ -32,7 +41,7 @@ func main() {
 	api.HandleFunc("/user/change/email", handler.ChangeEmailHandler).Methods("PATCH")
 	api.HandleFunc("/user/delete", handler.DeleteHandler).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":"+config.Get("SERVE_PORT"), router))
 }
 
 

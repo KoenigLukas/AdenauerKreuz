@@ -19,13 +19,14 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		if len(authHeader)!=2 {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Unauthorized"))
+			return
 		} else {
 		jwtToken := authHeader[1]
 		token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 			}
-			return []byte(config.GetEnvVariable("JWT_SECRET")), nil
+			return []byte(config.Get("JWT_SECRET")), nil
 		})
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
@@ -35,10 +36,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			fmt.Println(err)
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Unauthorized"))
+			return
 		}
 	}
 
-		secret := config.GetEnvVariable("JWT_SECRET")
+		secret := config.Get("JWT_SECRET")
 		fmt.Println(secret)
 		next.ServeHTTP(w, r)
 	})
