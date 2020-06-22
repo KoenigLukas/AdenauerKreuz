@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"../config"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/koeniglukas/config"
 	"net/http"
 	"strings"
 )

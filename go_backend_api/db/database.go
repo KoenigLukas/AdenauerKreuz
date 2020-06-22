@@ -1,10 +1,10 @@
 package db
 
 import (
-	"../config"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/koeniglukas/config"
 	"log"
 )
 
@@ -16,14 +16,21 @@ var (
 	dbname   = config.Get("DB_NAME")
 )
 
-var Db *sql.DB
+var (
+	Con *sql.DB
+)
 
 func Init() {
 
 	sqlInfo := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbname)
-
-	db, err := sql.Open("mysql", sqlInfo)
+	var err error
+	Con, err = sql.Open("mysql", sqlInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = Con.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
 }
+

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"./config"
-	"./handler"
-	"./middleware"
-	"./db"
 	"database/sql"
 	"github.com/gorilla/mux"
+	"github.com/koeniglukas/config"
+	"github.com/koeniglukas/db"
+	"github.com/koeniglukas/handler"
+	"github.com/koeniglukas/middleware"
 	"log"
 	"net/http"
 )
@@ -16,7 +16,7 @@ var Con sql.Conn
 func main() {
 
 	db.Init()
-	defer db.Db.Close()
+	defer db.Con.Close()
 
 	router := mux.NewRouter()
 	router.Use(middleware.LoggerMiddleware)

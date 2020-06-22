@@ -50,12 +50,12 @@ type List struct {
 }
 
 type AllLists struct{
-	Count int `json:"count"`
+	Count int     `json:"count"`
 	Lists *[]List `json:"lists"`
 }
 
 type UpdateListElem struct{
-	ListID int `json:"listID"`
+	ListID int               `json:"listID"`
 	ListElement *ListElement `json:"entry""`
 }
 
