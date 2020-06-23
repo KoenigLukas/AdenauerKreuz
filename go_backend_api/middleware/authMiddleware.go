@@ -1,17 +1,17 @@
 package middleware
 
 import (
+	"../config"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/koeniglukas/config"
 	"net/http"
 	"strings"
 )
 
 
-type Claims struct {
-	UserID int `json:"userID"`
-}
+//type Claims struct {
+//	UserID int `json:"userID"`
+//}
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -29,8 +29,9 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return []byte(config.Get("JWT_SECRET")), nil
 		})
 
+
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			r.Header.Set("userID",claims["userID"].(string))
+			r.Header.Set("userID",(claims)["userID"].(string))
 			next.ServeHTTP(w, r)
 		} else {
 			fmt.Println(err)

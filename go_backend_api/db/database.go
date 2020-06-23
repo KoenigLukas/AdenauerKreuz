@@ -1,10 +1,10 @@
 package db
 
 import (
+	"../config"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/koeniglukas/config"
 	"log"
 )
 

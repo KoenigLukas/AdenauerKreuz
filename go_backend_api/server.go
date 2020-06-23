@@ -1,12 +1,12 @@
 package main
 
 import (
+	"./config"
+	"./db"
+	"./handler"
+	"./middleware"
 	"database/sql"
 	"github.com/gorilla/mux"
-	"github.com/koeniglukas/config"
-	"github.com/koeniglukas/db"
-	"github.com/koeniglukas/handler"
-	"github.com/koeniglukas/middleware"
 	"log"
 	"net/http"
 )
@@ -42,6 +42,7 @@ func main() {
 	api.HandleFunc("/user/delete", handler.DeleteHandler).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":"+config.Get("SERVE_PORT"), router))
+
 }
 
 
