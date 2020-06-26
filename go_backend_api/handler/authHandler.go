@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"../config"
-	"../db"
+	"github.com/koeniglukas/config"
+	"github.com/koeniglukas/db"
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
 	"net/http"
@@ -139,3 +139,4 @@ func createToken(userid int) (string, error) {
 	}
 	return token, nil
 }
+
