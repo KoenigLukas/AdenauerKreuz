@@ -16,7 +16,7 @@ func RegisterUser(username string, email string, firstname string, lastname stri
 
 func LoginUser(username string, password string) int {
 	var id int
-	err := Con.QueryRow("SELECT userid FROM users WHERE username = ? and password = ?").Scan(&id)
+	err := Con.QueryRow("SELECT userid FROM users WHERE username = ? and password = ?",username,password).Scan(&id)
 	if err != nil {
 		return -1
 	}

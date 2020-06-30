@@ -128,11 +128,15 @@ func CheckEmailHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+type Claims struct {
+	UserID int `json:"userID"`
+	jwt.StandardClaims
+}
+
 func createToken(userid int) (string, error) {
 	var err error
-	atClaims := jwt.MapClaims{}
-	atClaims["user_id"] = userid
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	claims := Claims{UserID: userid}
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := at.SignedString([]byte(config.Get("JWT_SECRET")))
 	if err != nil {
 		return "", err

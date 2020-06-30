@@ -32,7 +32,7 @@ func main() {
 	api.HandleFunc("/test", handler.TestHandler).Methods("GET")
 
 	api.HandleFunc("/list/create", handler.ListCreateHandler).Methods("POST")
-	api.HandleFunc("/list/all", handler.ListGetAllHandler).Methods("POST")
+	api.HandleFunc("/list/all", handler.ListGetAllHandler).Methods("GET")
 	api.HandleFunc("/list/get/{id}", handler.ListGetHandler).Methods("GET")
 	api.HandleFunc("/list/entry/add", handler.ListEntryAddHandler).Methods("POST")
 	api.HandleFunc("/list/entry/edit", handler.ListEntryEditHandler).Methods("PUT")

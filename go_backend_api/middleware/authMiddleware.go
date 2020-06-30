@@ -5,12 +5,14 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/koeniglukas/config"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 
 type Claims struct {
 	UserID int `json:"userID"`
+	jwt.StandardClaims
 }
 
 func AuthMiddleware(next http.Handler) http.Handler {
@@ -22,15 +24,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		} else {
 		jwtToken := authHeader[1]
-		token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-			}
+
+		claims := &Claims{}
+
+		tkn, err := jwt.ParseWithClaims(jwtToken, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(config.Get("JWT_SECRET")), nil
 		})
 
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			r.Header.Set("userID",claims["userID"].(string))
+			s := strconv.FormatInt(int64(claims.UserID), 10)
+		if claims.UserID != 0 && tkn.Valid{
+			r.Header.Set("userID",s)
 			next.ServeHTTP(w, r)
 		} else {
 			fmt.Println(err)
@@ -39,10 +42,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 	}
-
-		secret := config.Get("JWT_SECRET")
-		fmt.Println(secret)
-		next.ServeHTTP(w, r)
 	})
 }
 
