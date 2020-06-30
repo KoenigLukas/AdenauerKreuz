@@ -9,7 +9,7 @@
 |/api/v1/check/emailAvailable/{email}|Check if Email is available|GET|
 
 ## /api/v1/login 
-**Method: POST**
+**Method: POST**  
 This endpoint is used to authenticate and generate a token for an already registered user.
 
 #### Request
@@ -20,7 +20,7 @@ This endpoint is used to authenticate and generate a token for an already regist
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "username":"string"
 	 "password":"SHA-256 string"
@@ -45,7 +45,7 @@ This Endpoint can return following StatusCodes:
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "token":"Encoded JWT-Token String"
  }
@@ -58,14 +58,14 @@ This Endpoint can return following StatusCodes:
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "err_message":"string"
  }
  ```
 
 ## /api/v1/register
-**Method: POST**
+**Method: POST**  
 This endpoint is used to register a new user and generate authentification
 
 #### Request
@@ -76,7 +76,7 @@ This endpoint is used to register a new user and generate authentification
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "username_check":boolean	//callback of /api/v1/check/userAvailable/{id}
 	 "email_check": boolean 		//callback of /api/v1/check/emailAvailable/{id}
@@ -107,7 +107,7 @@ This Endpoint can return following StatusCodes:
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "token":"JWT-Token String"
  }
@@ -121,7 +121,7 @@ This Endpoint can return following StatusCodes:
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "err_message":"string"
  	"email_check": boolean
@@ -137,14 +137,14 @@ This Endpoint can return following StatusCodes:
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "err_message":"string"
  }
  ```
 
 ## /api/v1/check/(userAvailable | emailAvailable)/{id}
-**Method: GET**
+**Method: GET**  
 This Endpoint is used to check if the Email/Username the Client is trying to register is available
 
 #### Response:
@@ -162,7 +162,7 @@ This Endpoint is used to check if the Email/Username the Client is trying to reg
 |Content-Type|application/json|
 
 ##### Body: 
-```json
+```
 {
 	"available": boolean
 }
@@ -176,14 +176,11 @@ This Endpoint is used to check if the Email/Username the Client is trying to reg
 
 ##### Body:
 
- ```json
+ ```
  {
 	 "err_message":"string"
  }
  ```
-
-
-
 
 
 ## Endpoints with Auth
@@ -192,6 +189,7 @@ This Endpoint is used to check if the Email/Username the Client is trying to reg
 |/api/v1/list/create|Create List  |POST|
 |/api/v1/list/all| Get All Lists|GET|
 |/api/v1/list/get/{id}|Get Specific List| GET|
+|/api/v1/list/delete/{id}|Delete List|DELETE|
 |/api/v1/list/entry/add|Add List Entry  |POST|
 |/api/v1/list/entry/edit|Edit List Entry |PUT|
 |/api/v1/list/entry/delete|Delete List Entry |DELETE|
@@ -210,11 +208,11 @@ The value needs to be **"Bearer " + JsonWebToken**.
 
 
 ### Invalid/Missing JWT-Token
-In case of an missing or invalid Token **403 Forbidden** will be returned.
+In case of an missing or invalid Token **401 Unauthorized** will be returned.
 
 
 ## /api/v1/list/create
-**Method: POST**
+**Method: POST**  
 This endpoint is used to create a new AdenauerKreuz List and receive its ID in return.
 
 #### Request
@@ -227,7 +225,7 @@ This endpoint is used to create a new AdenauerKreuz List and receive its ID in r
 
 ##### Body:
 
- ```json
+ ```  
  {
 	"name": "string"
  }
@@ -238,7 +236,7 @@ This endpoint is used to create a new AdenauerKreuz List and receive its ID in r
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 
@@ -252,7 +250,7 @@ This endpoint is used to create a new AdenauerKreuz List and receive its ID in r
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 "listID": int
  }
@@ -266,7 +264,7 @@ This endpoint is used to create a new AdenauerKreuz List and receive its ID in r
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 "err_message": "string"
  }
@@ -274,7 +272,7 @@ This endpoint is used to create a new AdenauerKreuz List and receive its ID in r
  
  ## /api/v1/list/all
  
-**Method: GET**
+**Method: GET**  
 This endpoint is used to get all Lists of a User
 
 #### Request
@@ -289,7 +287,7 @@ This endpoint is used to get all Lists of a User
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 
@@ -302,28 +300,28 @@ This endpoint is used to get all Lists of a User
 
 ##### Body:
 
- ```json
+ ```  
 {
 	"count":  int,
 	"lists":  [
-			{
-			"listID":  int,
-			"name":  "string",
-			"elements":  [
-					{
-						"elementID":  int,
-						"score":  int,
-						"Content":  "string",
-						"connotation":  boolean
-					},
-					{
-						...
-					}
-				]
-			},
-			{
-				...
-			}
+        {
+        "listID":  int,
+        "name":  "string",
+        "elements":  [
+                {
+                    "elementID":  int,
+                    "score":  int,
+                    "Content":  "string",
+                    "connotation":  boolean
+                },
+                {
+                    ...
+                }
+            ]
+        },
+        {
+            ...
+        }
 	]
 }
  ```
@@ -336,13 +334,13 @@ This endpoint is used to get all Lists of a User
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 "err_message": "string"
  }
  ```
 ## /api/v1/list/get/{id}
-**Method: GET**
+**Method: GET**  
 This endpoint is used to get a specific List by its ID
 
 #### Request
@@ -357,7 +355,7 @@ This endpoint is used to get a specific List by its ID
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 
@@ -370,20 +368,20 @@ This endpoint is used to get a specific List by its ID
 
 ##### Body:
 
- ```json
+ ```  
  {
 	"listID": int,
 	"name": "string",
 	"elements": [
-			{
-				"elementID": int,
-				"score": int,
-				"Content": "string",
-				"connotation": boolean
-			},
-			{
-				...
-			}
+        {
+            "elementID": int,
+            "score": int,
+            "Content": "string",
+            "connotation": boolean
+        },
+        {
+            ...
+        }
 	]
 }
  ```
@@ -396,15 +394,52 @@ This endpoint is used to get a specific List by its ID
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 "err_message": "string"
  }
  ```
 
+## /api/v1/list/delete/{id}
+**Method: DELETE**  
+This Endpoint is used to delete a List and its Elements  
+
+#### Request
+##### Header:
+|Key|Value|
+|-|-|
+|Authorization|Bearer JWT-Token|
+
+#### Response
+| Code | Name |Reason|
+|--|--|--|
+|  200|OK  |Successful Request|
+|400|Bad Request| Malformed Request|
+|401|Unauthorized|Invalid/Missing JWT|
+|500|Internal Server Error| Serverside Error
+
+#### Status 400/500 Failure
+##### Header: 
+|Key|Value|
+|-|-|
+|Content-Type|application/json|
+
+##### Body:
+
+ ```  
+ {
+	 err_message:"string"
+ }
+ ```
+
+#### Request
+##### Header:
+|Key|Value|
+|-|-|
+|Authorization|Bearer JWT-Token|
 
 ## /api/v1/list/entry/add
-**Method: POST**
+**Method: POST**  
 This endpoint is used to add a Entry to an existing List
 
 
@@ -418,15 +453,15 @@ This endpoint is used to add a Entry to an existing List
 
 ##### Body:
 
- ```json
+ ```  
 {
-"listID": int,
-"entry": {
-		"elementID": (int) null,
-		"score": int,
-		"content": "string",
-		"connotation": boolean
-	}
+	"listID": int,
+	"entry": {
+        "elementID": (int) null,
+        "score": int,
+        "content": "string",
+        "connotation": boolean
+    }
 }
  ```
 
@@ -435,7 +470,7 @@ This endpoint is used to add a Entry to an existing List
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 
@@ -447,7 +482,7 @@ This endpoint is used to add a Entry to an existing List
 |Content-Type|application/json|
 
 ##### Body:
-```json
+```  
 {
 	"elementID": int,
 	"score": int,
@@ -465,14 +500,14 @@ This endpoint is used to add a Entry to an existing List
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 err_message:"string"
  }
  ```
 
 ## /api/v1/list/entry/edit
-**Method: PUT**
+**Method: PUT**  
 This endpoint is used to update an existing List Entry
 
 
@@ -486,15 +521,15 @@ This endpoint is used to update an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
 {
-"listID": int,
-"entry": {
-		"elementID": int,
-		"score": int,
-		"content": "string",
-		"connotation": boolean
-	}
+	"listID": int,
+	"entry": {
+        "elementID": int,
+        "score": int,
+        "content": "string",
+        "connotation": boolean
+    }
 }
  ```
 
@@ -503,7 +538,7 @@ This endpoint is used to update an existing List Entry
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 
@@ -515,7 +550,7 @@ This endpoint is used to update an existing List Entry
 |Content-Type|application/json|
 
 ##### Body:
-```json
+```  
 {
 	"elementID": int,
 	"score": int,
@@ -533,13 +568,13 @@ This endpoint is used to update an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 err_message:"string"
  }
  ```
 ## /api/v1/list/entry/delete
-**Method: DELETE**
+**Method: DELETE**  
 This endpoint is used to delete an existing List Entry
 
 
@@ -553,7 +588,7 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
 {
 	"listID": int,
 	"elementID": int
@@ -565,7 +600,7 @@ This endpoint is used to delete an existing List Entry
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 #### Status 400/500 Failure
@@ -576,13 +611,13 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 err_message:"string"
  }
  ```
 ## /api/v1/user/change/password
-**Method: PATCH**
+**Method: PATCH**  
 This endpoint is used to delete an existing List Entry
 
 
@@ -596,9 +631,10 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
 {
-	"password":"SHA-256 string"
+	"old_password":"SHA-256 string"
+    "new_password":"SHA-256 string"
 }
  ```
 
@@ -607,7 +643,7 @@ This endpoint is used to delete an existing List Entry
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 #### Status 400/500 Failure
@@ -618,13 +654,13 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 err_message:"string"
  }
  ```
 ## /api/v1/user/change/email
-**Method: PATCH**
+**Method: PATCH**  
 This endpoint is used to delete an existing List Entry
 
 
@@ -638,9 +674,10 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
 {
-	"email":"string"
+	"old_email":"string"
+    "new_email":"string"
 }
  ```
 
@@ -649,7 +686,7 @@ This endpoint is used to delete an existing List Entry
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |409|Conflict|Email already Exists or not Valid
 |500|Internal Server Error| Serverside Error
 
@@ -661,13 +698,13 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 err_message:"string"
  }
  ```
 ## /api/v1/user/delete
-**Method: DELETE**
+**Method: DELETE**  
 This endpoint is used to delete an existing List Entry
 
 
@@ -683,7 +720,7 @@ This endpoint is used to delete an existing List Entry
 |--|--|--|
 |  200|OK  |Successful Request|
 |400|Bad Request| Malformed Request|
-|403|Forbidden|Invalid/Missing JWT|
+|401|Unauthorized|Invalid/Missing JWT|
 |500|Internal Server Error| Serverside Error
 
 #### Status 400/500 Failure
@@ -694,9 +731,8 @@ This endpoint is used to delete an existing List Entry
 
 ##### Body:
 
- ```json
+ ```  
  {
 	 err_message:"string"
  }
  ```
-
