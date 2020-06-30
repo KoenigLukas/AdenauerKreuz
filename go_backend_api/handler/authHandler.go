@@ -1,47 +1,21 @@
 package handler
 
 import (
-	"github.com/koeniglukas/config"
-	"github.com/koeniglukas/db"
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
+	"github.com/koeniglukas/config"
+	"github.com/koeniglukas/db"
+	"github.com/koeniglukas/storage"
 	"net/http"
 )
 
-type Login struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type Register struct {
-	Username_check bool   `json:"username_check"`
-	Email_check    bool   `json:"email_check"`
-	Username       string `json:"username"`
-	Email          string `json:"email"`
-	FirstName      string `json:"first_name"`
-	LastName       string `json:"last_name"`
-	Password       string `json:"password"`
-}
-
-type ErrorMsg struct {
-	Err_message string `json:"err_message"`
-}
-
-type RegisterErr struct{
-	Err_message string `json:"err_message"`
-	Email_check    bool   `json:"email_check"`
-	Username_check bool   `json:"username_check"`
-}
-
-type TokenStore struct {
-	Token string `json:"token"`
-}
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	var login Login
+	var login storage.Login
 	err := json.NewDecoder(r.Body).Decode(&login)
 	if err != nil {
-		errmsg := ErrorMsg{err.Error()}
+		errmsg := storage.ErrorMsg{err.Error()}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(errmsg)
@@ -52,18 +26,18 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if id == -1 {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		errmsg := ErrorMsg{"database error"}
+		errmsg := storage.ErrorMsg{"database error"}
 		json.NewEncoder(w).Encode(errmsg)
 		return
 	}
 
-	var token TokenStore
+	var token storage.TokenStore
 
 	token.Token, err = createToken(id)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		errmsg := ErrorMsg{"token generation failed"}
+		errmsg := storage.ErrorMsg{"token generation failed"}
 		json.NewEncoder(w).Encode(errmsg)
 		return
 	}
@@ -76,40 +50,40 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	var register Register
+	var register storage.Register
 	err := json.NewDecoder(r.Body).Decode(&register)
 	if err != nil {
-		errmsg := ErrorMsg{err.Error()}
+		errmsg := storage.ErrorMsg{err.Error()}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(errmsg)
 		return
 	}
 
-	if !(register.Username_check && register.Email_check){
+	if !(register.Username_check && register.Email_check) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusConflict)
-		regErrMsg := RegisterErr{"Invalid Checks",register.Email_check,register.Username_check}
+		regErrMsg := storage.RegisterErr{"Invalid Checks", register.Email_check, register.Username_check}
 		json.NewEncoder(w).Encode(regErrMsg)
 		return
 	}
 
-	id := db.RegisterUser(register.Username,register.Email,register.FirstName,register.LastName,register.Password)
+	id := db.RegisterUser(register.Username, register.Email, register.FirstName, register.LastName, register.Password)
 	if id == -1 {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		errmsg := ErrorMsg{"database error"}
+		errmsg := storage.ErrorMsg{"database error"}
 		json.NewEncoder(w).Encode(errmsg)
 		return
 	}
 
-	var token TokenStore
+	var token storage.TokenStore
 
 	token.Token, err = createToken(id)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
-		errmsg := ErrorMsg{"token generation failed"}
+		errmsg := storage.ErrorMsg{"token generation failed"}
 		json.NewEncoder(w).Encode(errmsg)
 		return
 	}
@@ -121,11 +95,37 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CheckUsernameHandler(w http.ResponseWriter, r *http.Request) {
-
+	pathParams := mux.Vars(r)
+	available, err := db.CheckUsernameAvailable(pathParams["username"])
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		errmsg := storage.ErrorMsg{err.Error()}
+		json.NewEncoder(w).Encode(errmsg)
+		return
+	}
+	ret := storage.AvailableCheck{available}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(ret)
+	return
 }
 
 func CheckEmailHandler(w http.ResponseWriter, r *http.Request) {
-
+	pathParams := mux.Vars(r)
+	available, err := db.CheckEmailAvailable(pathParams["email"])
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		errmsg := storage.ErrorMsg{err.Error()}
+		json.NewEncoder(w).Encode(errmsg)
+		return
+	}
+	ret := storage.AvailableCheck{available}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(ret)
+	return
 }
 
 func createToken(userid int) (string, error) {
@@ -139,4 +139,3 @@ func createToken(userid int) (string, error) {
 	}
 	return token, nil
 }
-
